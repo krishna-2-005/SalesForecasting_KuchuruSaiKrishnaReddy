@@ -10,7 +10,6 @@ st.set_page_config(page_title="XYLOFY AI - Superstore Dashboard",layout="wide")
 @st.cache_data
 def load_data():
     df=pd.read_csv("train.csv")
-    st.write(df.columns)
     df["Order Date"]=pd.to_datetime(df["Order Date"],dayfirst=True,errors="coerce")
     return df
 df=load_data()
@@ -19,7 +18,6 @@ regions=st.sidebar.multiselect("Region",sorted(df.Region.unique()),default=sorte
 cats=st.sidebar.multiselect("Category",sorted(df.Category.unique()),default=sorted(df.Category.unique()))
 f=df[df.Region.isin(regions)&df.Category.isin(cats)]
 sales = f["Sales"].sum()
-profit = f["Profit"].sum()
 orders = f["Order ID"].nunique()
 aov = sales / orders
 col1, col2, col3 = st.columns(3)
