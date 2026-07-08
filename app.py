@@ -24,17 +24,17 @@ a.metric("Sales",f"${sales:,.0f}"); b.metric("Profit",f"${profit:,.0f}")
 c.metric("Orders",orders); d.metric("AOV",f"${aov:,.2f}")
 t=st.tabs(["Overview","Time Series","Forecasting","Anomalies","Clustering","Insights"])
 with t[0]:
- m=f.groupby(pd.Grouper(key="Order Date",freq="M"))["Sales"].sum().reset_index()
+ m=f.groupby(pd.Grouper(key="Order Date",freq="ME"))["Sales"].sum().reset_index()
  st.plotly_chart(px.line(m,x="Order Date",y="Sales"),use_container_width=True)
  st.plotly_chart(px.bar(f.groupby("Category")["Sales"].sum().reset_index(),x="Category",y="Sales"),use_container_width=True)
 with t[1]:
- m=f.groupby(pd.Grouper(key="Order Date",freq="M"))["Sales"].sum().reset_index();m["MA3"]=m.Sales.rolling(3).mean()
+ m=f.groupby(pd.Grouper(key="Order Date",freq="ME"))["Sales"].sum().reset_index();m["MA3"]=m.Sales.rolling(3).mean()
  st.plotly_chart(px.line(m,x="Order Date",y=["Sales","MA3"]),use_container_width=True)
 with t[2]:
  st.dataframe(pd.DataFrame({"Model":["SARIMA","Prophet","XGBoost"],"MAE":[20580.7,20250.79,15110.78],"RMSE":[22190.91,22318.41,19239.17],"MAPE":[21.94,21.86,14.81]}))
  st.success("Recommended Model: XGBoost")
 with t[3]:
- m=f.groupby(pd.Grouper(key="Order Date",freq="M"))["Sales"].sum().reset_index()
+ m=f.groupby(pd.Grouper(key="Order Date",freq="ME"))["Sales"].sum().reset_index()
  iso=IsolationForest(contamination=0.08,random_state=42)
  m["A"]=iso.fit_predict(m[["Sales"]]);fig=px.line(m,x="Order Date",y="Sales")
  an=m[m.A==-1];fig.add_scatter(x=an["Order Date"],y=an["Sales"],mode="markers",name="Anomaly");st.plotly_chart(fig,use_container_width=True)
