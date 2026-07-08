@@ -10,6 +10,7 @@ st.set_page_config(page_title="XYLOFY AI - Superstore Dashboard",layout="wide")
 @st.cache_data
 def load_data():
     df=pd.read_csv("train.csv")
+    st.write(df.columns)
     df["Order Date"]=pd.to_datetime(df["Order Date"],dayfirst=True,errors="coerce")
     return df
 df=load_data()
@@ -17,11 +18,15 @@ st.title("Superstore Sales Analytics Dashboard")
 regions=st.sidebar.multiselect("Region",sorted(df.Region.unique()),default=sorted(df.Region.unique()))
 cats=st.sidebar.multiselect("Category",sorted(df.Category.unique()),default=sorted(df.Category.unique()))
 f=df[df.Region.isin(regions)&df.Category.isin(cats)]
-sales=f.Sales.sum(); profit=f["Profit"].sum() if "Profit" in f.columns else 0
-orders=f["Order ID"].nunique(); aov=sales/orders if orders else 0
-a,b,c,d=st.columns(4)
-a.metric("Sales",f"${sales:,.0f}"); b.metric("Profit",f"${profit:,.0f}")
-c.metric("Orders",orders); d.metric("AOV",f"${aov:,.2f}")
+sales = f["Sales"].sum()
+profit = f["Profit"].sum()
+orders = f["Order ID"].nunique()
+aov = sales / orders
+col1, col2, col3 = st.columns(3)
+
+col1.metric("Total Sales", f"${sales:,.0f}")
+col2.metric("Total Orders", orders)
+col3.metric("Average Order Value", f"${aov:,.2f}")
 t=st.tabs(["Overview","Time Series","Forecasting","Anomalies","Clustering","Insights"])
 with t[0]:
  m=f.groupby(pd.Grouper(key="Order Date",freq="ME"))["Sales"].sum().reset_index()
@@ -49,3 +54,32 @@ with t[5]:
  st.write("Best Forecasting Model: XGBoost")
  st.write("Highest Forecast Category: Office Supplies")
  st.write("Strongest Region: East")
+st.markdown("---")
+
+st.markdown("""
+## Executive Business Insights
+
+**Best Forecasting Model**
+- XGBoost achieved the best performance with the lowest forecasting error (MAE, RMSE and MAPE).
+
+**Sales Trend**
+- Overall sales show an increasing trend with seasonal fluctuations.
+
+**Product Insights**
+- Office Supplies is forecasted to generate the highest sales over the next three months.
+
+**Regional Performance**
+- East region continues to contribute the highest revenue.
+
+**Anomaly Detection**
+- Isolation Forest successfully identified unusual sales spikes and drops for business monitoring.
+
+**Customer Segmentation**
+- K-Means clustering grouped products into four meaningful business segments for inventory planning.
+
+**Project Developed For**
+XYLOFY AI Internship Program
+
+**Developed By**
+Kuchuru Sai Krishna Reddy
+""")
