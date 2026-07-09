@@ -16,6 +16,27 @@ This project turns historical retail sales data into an interactive business das
 - Product clustering using K-Means and PCA
 - Executive summary of business insights
 
+## Numerical Results
+
+The current project analysis includes the following measurable results:
+
+- 9,800 data rows processed from `train.csv`
+- 4,922 unique orders analyzed
+- Total sales of $2,261,536.78
+- Average order value of $459.48
+- 4 regions and 3 product categories in scope
+- Date range from 2015-01-03 to 2018-12-30
+
+## Forecasting Metrics
+
+Model comparison in the dashboard currently shows:
+
+- SARIMA: MAE 20,580.70, RMSE 22,190.91, MAPE 21.94%
+- Prophet: MAE 20,250.79, RMSE 22,318.41, MAPE 21.86%
+- XGBoost: MAE 15,110.78, RMSE 19,239.17, MAPE 14.81%
+
+XGBoost is the recommended model based on the lowest error values.
+
 ## Repository Contents
 
 - `app.py` - Main Streamlit application
